@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Services\CreatePostService;
+use App\Services\JsonPlaceHolderService;
+use App\Services\ListPostsService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -12,6 +15,16 @@ class PostController extends Controller
      */
     public function index()
     {
+        return view('posts.index');
+    }
+
+    public function import(CreatePostService $createPostService, ListPostsService $listPostsService)
+    {
+        $existentItems = $listPostsService->execute();
+
+        $service  = new JsonPlaceHolderService();
+        $service->import($createPostService, $existentItems);
+
         return view('posts.index');
     }
 

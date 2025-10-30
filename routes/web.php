@@ -21,10 +21,9 @@ Route::get('/register', function() {
 })->name('register');
 
 
-
-
 Route::prefix('/posts')->group(function(){
 
     Route::get('/', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/import', [PostController::class, 'import'])->name('posts.import');
 
 });
