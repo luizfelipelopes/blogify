@@ -5,16 +5,15 @@ namespace App\Services;
 use App\Models\Post;
 use Illuminate\Support\Facades\Http;
 
-class JsonPlaceHolderService
+class FakeStoreService
 {
     /**
      * Create a new class instance.
      */
-    
     private readonly string $baseUrl;
     public function __construct()
     {
-        $this->baseUrl = config('app.api_json_place_holder');
+        $this->baseUrl = config('app.api_fake_store');
     }
 
     public function import(CreatePostService $createPostService, array $existentsItems): Post
@@ -27,9 +26,9 @@ class JsonPlaceHolderService
 
         $data = [
             'title' => $dataResponse['title'],
-            'content' => $dataResponse['body'],
+            'content' => $dataResponse['description'],
             'status' => 'draft',
-            'source' => 'JSONPlaceholder', 
+            'source' => 'FakeStore', 
             'external_id' => $dataResponse['id'], 
         ];
 
@@ -58,5 +57,4 @@ class JsonPlaceHolderService
         return $total;
         
     }
-
 }

@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'api_json_place_holder' => env('API_JSON_PLACE_HOLDER'),
+    'api_fake_store' => env('API_FAKE_STORE'),
+
 ];

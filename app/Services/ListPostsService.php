@@ -15,9 +15,12 @@ class ListPostsService
     }
 
 
-    public function execute()
+    public function execute(string $type)
     {
-        $result = Post::where('source', 'JSONPlaceholder')
+
+        $operator = $type == 'blog' ? 'JSONPlaceholder' : 'FakeStore';
+
+        $result = Post::where('source', $operator)
         ->pluck('external_id')
         ->toArray();
 

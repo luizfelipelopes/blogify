@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Services\CreatePostService;
+use App\Services\FakeStoreService;
 use App\Services\JsonPlaceHolderService;
 use App\Services\ListPostsService;
 use Illuminate\Http\Request;
@@ -18,11 +19,18 @@ class PostController extends Controller
         return view('posts.index');
     }
 
-    public function import(CreatePostService $createPostService, ListPostsService $listPostsService)
+    public function import(Request $request, CreatePostService $createPostService, ListPostsService $listPostsService)
     {
-        $existentItems = $listPostsService->execute();
+        
+        $type = $request->type;
+        $existentItems = $listPostsService->execute($type);
 
-        $service  = new JsonPlaceHolderService();
+        if($type == 'blog') {
+            $service  = new JsonPlaceHolderService();
+        } else {
+            $service  = new FakeStoreService();
+        }
+        
         $service->import($createPostService, $existentItems);
 
         return view('posts.index');
