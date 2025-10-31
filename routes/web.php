@@ -30,5 +30,4 @@ Route::prefix('/posts')->group(function(){
     Route::put('/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/{post}', [PostController::class, 'destroy'])->name('posts.delete');
     
-
 });
