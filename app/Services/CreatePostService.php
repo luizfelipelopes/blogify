@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\CreatePostDTO;
 use App\Models\Post;
 
 class CreatePostService
@@ -11,9 +12,9 @@ class CreatePostService
      */
     public function __construct(){}
 
-    public function execute(array $data)
+    public function execute(CreatePostDTO $data): Post
     {
-        $result = Post::create($data);
+        $result = Post::create((array) $data);
 
         return $result;
     }

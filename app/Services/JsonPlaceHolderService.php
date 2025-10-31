@@ -2,16 +2,13 @@
 
 namespace App\Services;
 
+use App\DTOs\CreatePostDTO;
 use App\Interfaces\ImportPostInterface;
 use App\Models\Post;
 use Illuminate\Support\Facades\Http;
 
 class JsonPlaceHolderService implements ImportPostInterface
 {
-    /**
-     * Create a new class instance.
-     */
-    
     private readonly string $baseUrl;
     public function __construct()
     {
@@ -26,13 +23,14 @@ class JsonPlaceHolderService implements ImportPostInterface
         $response = Http::get("{$this->baseUrl}/$randomId");    
         $dataResponse = $response->json();
 
-        $data = [
-            'title' => $dataResponse['title'],
-            'content' => $dataResponse['body'],
-            'status' => 'draft',
-            'source' => 'JSONPlaceholder', 
-            'external_id' => $dataResponse['id'], 
-        ];
+
+        $data = new CreatePostDTO(
+            title: $dataResponse['title'],
+            content: $dataResponse['body'],
+            status: 'draft',
+            source: 'JSONPlaceholder',
+            externalId: $dataResponse['id'],
+        );
 
         $result = $createPostService->execute($data);
 

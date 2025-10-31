@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTOs\CreatePostDTO;
 use App\Interfaces\ImportPostInterface;
 use App\Models\Post;
 use Illuminate\Support\Facades\Http;
@@ -16,19 +17,23 @@ class FakeStoreService implements ImportPostInterface
 
     public function import(CreatePostService $createPostService, array $existentsItems): Post
     {
-        
         $randomId = $this->getRandomId($existentsItems);
 
         $response = Http::get("{$this->baseUrl}/$randomId");    
         $dataResponse = $response->json();
+        
+        $content = "{$dataResponse['description']}\n 
+        Price: {$dataResponse['price']}\n 
+        Category: {$dataResponse['category']}\n 
+        Rate: rate: {$dataResponse['rating']['rate']} / count: {$dataResponse['rating']['count']}";
 
-        $data = [
-            'title' => $dataResponse['title'],
-            'content' => $dataResponse['description'],
-            'status' => 'draft',
-            'source' => 'FakeStore', 
-            'external_id' => $dataResponse['id'], 
-        ];
+        $data = new CreatePostDTO(
+            title: $dataResponse['title'],
+            content: $content,
+            status: 'draft',
+            source: 'FakeStore',
+            externalId: $dataResponse['id'],
+        );
 
         $result = $createPostService->execute($data);
 

@@ -13,7 +13,7 @@
         <h1>{{ $post->title }}</h1>
         <span>{{ ucfirst($post->status) }}</span> | <span>{{ $post->source }}</span>
 
-        <p class="mt-2">{{ $post->content }}</p>
+        <p class="mt-2">{!! nl2br($post->content) !!}</p>
 
     </div>
 @endsection
