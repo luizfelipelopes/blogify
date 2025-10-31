@@ -11,19 +11,26 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    public function __construct(protected ListPostsService $listPostsService)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('posts.index');
+        $posts = $this->listPostsService->execute();
+        return view('posts.index', ['posts' => $posts]);
     }
 
-    public function import(Request $request, CreatePostService $createPostService, ListPostsService $listPostsService)
+    public function import(Request $request, CreatePostService $createPostService)
     {
         
         $type = $request->type;
-        $existentItems = $listPostsService->execute($type);
+        $existentItems = $this->listPostsService->execute('externalId', $type);
 
         if($type == 'blog') {
             $service  = new JsonPlaceHolderService();
@@ -33,7 +40,7 @@ class PostController extends Controller
         
         $service->import($createPostService, $existentItems);
 
-        return view('posts.index');
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -41,7 +48,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('posts.single', ['post' => $post]);
     }
 
     /**
@@ -49,7 +56,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('posts.edit', ['post' => $post]);
     }
 
     /**
