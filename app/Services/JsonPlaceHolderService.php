@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Interfaces\ImportPostInterface;
 use App\Models\Post;
 use Illuminate\Support\Facades\Http;
 
-class JsonPlaceHolderService
+class JsonPlaceHolderService implements ImportPostInterface
 {
     /**
      * Create a new class instance.
@@ -39,7 +40,7 @@ class JsonPlaceHolderService
 
     }
 
-    private function getRandomId(array $existentsItems): int
+    public function getRandomId(array $existentsItems): int
     {
         $maxItem = $this->getMaxItem();
 
@@ -50,7 +51,7 @@ class JsonPlaceHolderService
         return $randomId;
     }
 
-    private function getMaxItem(): int
+    public function getMaxItem(): int
     {
         $response = Http::get("{$this->baseUrl}");
         $total = count($response->json());

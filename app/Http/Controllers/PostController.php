@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Services\CreatePostService;
 use App\Services\DeletePostService;
-use App\Services\FakeStoreService;
-use App\Services\JsonPlaceHolderService;
+use App\Services\ImportPostService;
 use App\Services\ListPostsService;
 use App\Services\UpdatePostService;
 use Illuminate\Http\Request;
@@ -18,7 +17,9 @@ class PostController extends Controller
         protected ListPostsService $listPostsService,
         protected CreatePostService $createPostService,
         protected UpdatePostService $updatePostService,
-        protected DeletePostService $deletePostService)
+        protected DeletePostService $deletePostService,
+        protected ImportPostService $importPostService,
+        )
     {}
 
     /**
@@ -35,14 +36,8 @@ class PostController extends Controller
         
         $type = $request->type;
         $existentItems = $this->listPostsService->execute('externalId', $type);
-
-        if($type == 'blog') {
-            $service  = new JsonPlaceHolderService();
-        } else {
-            $service  = new FakeStoreService();
-        }
         
-        $service->import($this->createPostService, $existentItems);
+        $this->importPostService->execute($this->createPostService, $existentItems);
 
         return redirect()->route('posts.index');
     }

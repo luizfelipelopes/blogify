@@ -2,14 +2,12 @@
 
 namespace App\Services;
 
+use App\Interfaces\ImportPostInterface;
 use App\Models\Post;
 use Illuminate\Support\Facades\Http;
 
-class FakeStoreService
+class FakeStoreService implements ImportPostInterface
 {
-    /**
-     * Create a new class instance.
-     */
     private readonly string $baseUrl;
     public function __construct()
     {
@@ -38,7 +36,7 @@ class FakeStoreService
 
     }
 
-    private function getRandomId(array $existentsItems): int
+    public function getRandomId(array $existentsItems): int
     {
         $maxItem = $this->getMaxItem();
 
@@ -49,7 +47,7 @@ class FakeStoreService
         return $randomId;
     }
 
-    private function getMaxItem(): int
+    public function getMaxItem(): int
     {
         $response = Http::get("{$this->baseUrl}");
         $total = count($response->json());
