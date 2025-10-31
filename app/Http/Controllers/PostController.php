@@ -4,18 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Services\CreatePostService;
+use App\Services\DeletePostService;
 use App\Services\FakeStoreService;
 use App\Services\JsonPlaceHolderService;
 use App\Services\ListPostsService;
+use App\Services\UpdatePostService;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
 
-    public function __construct(protected ListPostsService $listPostsService)
-    {
-
-    }
+    public function __construct(
+        protected ListPostsService $listPostsService,
+        protected CreatePostService $createPostService,
+        protected UpdatePostService $updatePostService,
+        protected DeletePostService $deletePostService)
+    {}
 
     /**
      * Display a listing of the resource.
@@ -26,7 +30,7 @@ class PostController extends Controller
         return view('posts.index', ['posts' => $posts]);
     }
 
-    public function import(Request $request, CreatePostService $createPostService)
+    public function import(Request $request)
     {
         
         $type = $request->type;
@@ -38,7 +42,7 @@ class PostController extends Controller
             $service  = new FakeStoreService();
         }
         
-        $service->import($createPostService, $existentItems);
+        $service->import($this->createPostService, $existentItems);
 
         return redirect()->route('posts.index');
     }
@@ -64,7 +68,10 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $data = $request->all();
+        $result = $this->updatePostService->execute($data, $post);
+
+        return view('posts.single', ['post' => $post]);
     }
 
     /**
@@ -72,6 +79,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+
+        $this->deletePostService->execute($post);
+        return redirect()->route('posts.index');
+
     }
 }

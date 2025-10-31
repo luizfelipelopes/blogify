@@ -24,9 +24,11 @@ Route::get('/register', function() {
 Route::prefix('/posts')->group(function(){
 
     Route::get('/', [PostController::class, 'index'])->name('posts.index');
-    Route::get('/{post}', [PostController::class, 'show'])->name('posts.show');
-    Route::get('/{post}', [PostController::class, 'edit'])->name('posts.edit');
-    Route::put('/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::get('/import', [PostController::class, 'import'])->name('posts.import');
+    Route::get('/{post}', [PostController::class, 'show'])->name('posts.show');
+    Route::get('/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/{post}', [PostController::class, 'destroy'])->name('posts.delete');
+    
 
 });

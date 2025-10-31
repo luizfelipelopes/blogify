@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
+        <a href="{{ route('posts.show', $post->id) }}">Back</a>
+
+        <div class="mt-2 row justify-content-center">
             <div class="col-md-6">
                 <form action="{{ route('posts.update', $post->id) }}" method="post">
                     @csrf
@@ -19,8 +21,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="post-content" class="form-label">Content</label>
-                        <input type="content" name="content" class="form-control" id="post-content"
-                               value="{{ old('content') ?? $post->content }}">
+                        <textarea style="min-height: 120px" type="content" name="content" class="form-control" id="post-content">{{ old('content') ?? $post->content }}</textarea>       
                         @error('content')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -29,8 +30,10 @@
                     </div>
                     <div class="mb-3">
                         <label for="post-status" class="form-label">Status</label>
-                        <input type="status" name="status" class="form-control" id="post-status"
-                        value="{{ old('status') ?? $post->status }}">
+                        <select type="status" name="status" class="form-control" id="post-status">
+                            <option @selected((old('status') ??  $post->status) == 'draft') value="draft">Draft</option>
+                            <option @selected((old('status') ??  $post->status) == 'published') value="published">Published</option>
+                          </select>
                         @error('status')
                         <div class="invalid-feedback">
                             {{ $message }}
