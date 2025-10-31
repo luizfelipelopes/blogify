@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\UpdatePostDTO;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\CreatePostService;
 use App\Services\DeletePostService;
 use App\Services\ImportPostService;
 use App\Services\ListPostsService;
 use App\Services\UpdatePostService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -61,12 +65,20 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): RedirectResponse
     {
-        $data = $request->all();
-        $result = $this->updatePostService->execute($data, $post);
+        $data = $request->validated();
+        
+        $postDTO = new UpdatePostDTO(
+            title: $data['title'],
+            content: $data['content'],
+            status: $data['status'],
+        );
+        
+        $this->updatePostService->execute($postDTO, $post);
 
-        return view('posts.single', ['post' => $post]);
+        return redirect()->route('posts.show', $post)
+        ->with('success', 'Post updated successfully!');
     }
 
     /**
